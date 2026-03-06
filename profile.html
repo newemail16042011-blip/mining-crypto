@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="Favicon.png" type="image/png">
+    <title>Profile - Nexora</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: #808080;
+            padding: 20px;
+        }
+
+        /* Navigation Bar Styles */
+        .navbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 50px;
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            border-bottom: 3px solid white;
+            margin-bottom: 30px;
+        }
+
+        /* Logo in nav */
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 25px;
+            margin-right: 20px;
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            border-radius: 30px;
+            color: white;
+            font-weight: 700;
+            font-size: 20px;
+            border: 2px solid white;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-logo span {
+            font-size: 24px;
+        }
+
+        /* Notification Bell */
+        .notification-link {
+            padding: 14px 18px;
+        }
+        
+        .notification-link span {
+            font-size: 20px;
+        }
+
+        .notification-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 8px;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 30px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            color: white;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            border: 2px solid white;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .nav-link:hover::after {
+            width: 50%;
+        }
+
+        .nav-link.active::after {
+            width: 70%;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Profile Header */
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-header h1 {
+            color: white;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        /* Profile Picture Section */
+        .profile-picture-section {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(20px);
+            border: 2px solid white;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .profile-picture-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .profile-picture {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 4px solid #667eea;
+            object-fit: cover;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            color: white;
+            margin: 0 auto;
+        }
+
+        .profile-picture img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .upload-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 5px;
+            border: none;
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .delete-btn {
+            display: inline-block;
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 5px;
+            border: 1px solid #ff6b6b;
+        }
+
+        .delete-btn:hover {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .delete-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #profileInput {
+            display: none;
+        }
+
+        /* User Info Section */
+        .user-info-section {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(20px);
+            border: 2px solid white;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .user-info-section h2 {
+            color: white;
+            font-size: 22px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: rgba(255,255,255,0.7);
+            font-weight: 500;
+        }
+
+        .info-value {
+            color: white;
+            font-weight: 600;
+            text-align: right;
+            max-width: 60%;
+            word-break: break-word;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 15px;
+                border-radius: 20px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-link {
+                padding: 10px 15px;
+                font-size: 13px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .info-row {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .info-value {
+                text-align: left;
+                max-width: 100%;
+            }
+        }
+
+        /* Account Stats */
+        .account-stats {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(20px);
+            border: 2px solid white;
+        }
+
+        .account-stats h2 {
+            color: white;
+            font-size: 22px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .stat-item {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .stat-value {
+            color: #667eea;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        /* Logout Section */
+        .logout-section {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
+            color: white;
+            border: none;
+            padding: 16px 50px;
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(255, 107, 107, 0.6);
+        }
+
+        /* Confirmation Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .modal h3 {
+            color: white;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .modal p {
+            color: rgba(255,255,255,0.8);
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 14px 35px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .modal-btn.yes {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
+            color: white;
+        }
+
+        .modal-btn.no {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 15px;
+                border-radius: 20px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-link {
+                padding: 10px 15px;
+                font-size: 13px;
+            }
+
+            .nav-logo {
+                font-size: 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .info-row {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .info-value {
+                text-align: left;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-logo">
+            <span>💎</span> Nexora
+        </div>
+        <ul class="nav-links">
+            <li class="nav-item">
+                <a href="notification.html" class="nav-link notification-link">
+                    <span>🔔</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="dashboard.html" class="nav-link">
+                    <span>🏠</span> Home
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="invite.html" class="nav-link">
+                    <span>📨</span> Invite
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="reward.html" class="nav-link">
+                    <span>🎁</span> Reward
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="profile.html" class="nav-link active">
+                    <span>👤</span> Profile
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <h1>👤 My Profile</h1>
+        </div>
+
+        <!-- Profile Picture Section -->
+        <div class="profile-picture-section">
+            <div class="profile-picture-container">
+                <div class="profile-picture" id="profilePicture">
+                    <span id="profileInitial">👤</span>
+                </div>
+            </div>
+            <div>
+                <label for="profileInput" class="upload-btn">📤 Upload Photo</label>
+                <input type="file" id="profileInput" accept="image/*" onchange="uploadProfilePicture(event)">
+                <button class="delete-btn" id="deleteBtn" onclick="deleteProfilePicture()" disabled>🗑️ Remove</button>
+            </div>
+        </div>
+
+        <!-- User Info Section -->
+        <div class="user-info-section">
+            <h2>👤 User Information</h2>
+            <div class="info-row">
+                <span class="info-label">Full Name</span>
+                <span class="info-value" id="fullName">-</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Username</span>
+                <span class="info-value" id="userName">-</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Email</span>
+                <span class="info-value" id="email">-</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Password</span>
+                <span class="info-value">••••••••</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Country</span>
+                <span class="info-value" id="country">Not set</span>
+            </div>
+        </div>
+
+        <!-- Account Stats -->
+        <div class="account-stats">
+            <h2>📊 Account Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value" id="totalBalance">0.00</div>
+                    <div class="stat-label">Total Balance (NXC)</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="totalClaimed">0</div>
+                    <div class="stat-label">Rewards Claimed</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="miningSessions">0</div>
+                    <div class="stat-label">Mining Sessions</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="currentStreak">0</div>
+                    <div class="stat-label">Current Streak</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Logout Section -->
+        <div class="logout-section">
+            <button class="logout-btn" onclick="showLogoutModal()">🚪 Logout</button>
+        </div>
+    </div>
+
+    <!-- Logout Confirmation Modal -->
+    <div class="modal-overlay" id="logoutModal">
+        <div class="modal">
+            <h3>🚪 Logout</h3>
+            <p>Are you sure you want to logout?</p>
+            <div class="modal-buttons">
+                <button class="modal-btn yes" onclick="confirmLogout()">Yes, Logout</button>
+                <button class="modal-btn no" onclick="hideLogoutModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Store current page before going offline
+        function storeCurrentPage() {
+            sessionStorage.setItem('nexora_redirect_page', window.location.href);
+        }
+
+        // Listen for offline event - redirect to nointernet.html
+        window.addEventListener('offline', function() {
+            storeCurrentPage();
+            window.location.href = 'nointernet.html';
+        });
+
+        // Check for internet connectivity on page load
+        function checkInternetConnection() {
+            if (!navigator.onLine) {
+                storeCurrentPage();
+                window.location.href = 'nointernet.html';
+                return false;
+            }
+            
+            // Try to fetch a resource to verify actual internet connectivity
+            fetch('https://www.google.com/generate_204', { method: 'HEAD', mode: 'no-cors' })
+                .then(function() {
+                    // Internet is working
+                })
+                .catch(function() {
+                    // No internet connection
+                    storeCurrentPage();
+                    window.location.href = 'nointernet.html';
+                });
+        }
+
+        // Initial check on page load
+        checkInternetConnection();
+
+        // Periodic check every 5 seconds
+        setInterval(checkInternetConnection, 5000);
+
+        window.addEventListener('online', function() {
+            // Already handled by nointernet.html
+        });
+
+        // Load user data on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            loadProfilePicture();
+            loadAccountStats();
+        });
+
+        // Load user data from localStorage
+        function loadUserData() {
+            const userData = JSON.parse(localStorage.getItem('nexora_user') || '{}');
+            
+            document.getElementById('fullName').textContent = userData.fullname || 'Not set';
+            document.getElementById('userName').textContent = userData.username || 'Not set';
+            document.getElementById('email').textContent = userData.email || 'Not set';
+            document.getElementById('country').textContent = userData.country || 'Not set';
+            
+            // Set initial
+            if (userData.fullname) {
+                document.getElementById('profileInitial').textContent = userData.fullname.charAt(0).toUpperCase();
+            }
+        }
+
+        // Load account stats
+        function loadAccountStats() {
+            // Total balance from mining
+            const miningBalance = parseFloat(localStorage.getItem('totalBalance')) || 0;
+            
+            // Rewards data
+            const rewardData = JSON.parse(localStorage.getItem('nexora_rewards') || '{"totalClaimed": 0}');
+            const rewardBalance = rewardData.totalClaimed || 0;
+            
+            // Total balance
+            const totalBalance = miningBalance + rewardBalance;
+            document.getElementById('totalBalance').textContent = totalBalance.toFixed(2);
+            
+            // Rewards claimed
+            document.getElementById('totalClaimed').textContent = rewardData.totalClaimed || 0;
+            
+            // Mining sessions
+            const sessions = parseInt(localStorage.getItem('miningSessions')) || 0;
+            document.getElementById('miningSessions').textContent = sessions;
+            
+            // Current streak
+            const currentDay = rewardData.currentDay || 1;
+            document.getElementById('currentStreak').textContent = currentDay - 1;
+        }
+
+        // Profile picture functions
+        function uploadProfilePicture(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imageData = e.target.result;
+                    localStorage.setItem('profilePicture', imageData);
+                    displayProfilePicture(imageData);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function displayProfilePicture(imageData) {
+            const profilePicture = document.getElementById('profilePicture');
+            profilePicture.innerHTML = `<img src="${imageData}" alt="Profile Picture">`;
+            document.getElementById('deleteBtn').disabled = false;
+        }
+
+        function loadProfilePicture() {
+            const imageData = localStorage.getItem('profilePicture');
+            if (imageData) {
+                displayProfilePicture(imageData);
+            }
+        }
+
+        function deleteProfilePicture() {
+            localStorage.removeItem('profilePicture');
+            const profilePicture = document.getElementById('profilePicture');
+            profilePicture.innerHTML = '<span id="profileInitial">👤</span>';
+            document.getElementById('deleteBtn').disabled = true;
+            
+            // Reset to initial
+            const userData = JSON.parse(localStorage.getItem('nexora_user') || '{}');
+            if (userData.fullname) {
+                document.getElementById('profileInitial').textContent = userData.fullname.charAt(0).toUpperCase();
+            }
+        }
+
+        // Logout functions
+        function showLogoutModal() {
+            document.getElementById('logoutModal').classList.add('show');
+        }
+
+        function hideLogoutModal() {
+            document.getElementById('logoutModal').classList.remove('show');
+        }
+
+        function confirmLogout() {
+            // Clear user session but keep data
+            localStorage.setItem('isLoggedIn', 'false');
+            
+            // Redirect to login
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

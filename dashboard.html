@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="Favicon.png" type="image/png">
+    <title>Dashboard - Nexora</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: #808080;
+            padding: 20px;
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #808080;
+            border: 3px solid white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Navigation Bar Styles */
+        .navbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 50px;
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            border-bottom: 3px solid white;
+            margin-bottom: 30px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 8px;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 30px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            color: white;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            border: 2px solid white;
+        }
+
+        /* Navigation Animation */
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .nav-link:hover::after {
+            width: 50%;
+        }
+
+        .nav-link.active::after {
+            width: 70%;
+        }
+        
+        /* Notification Bell */
+        .notification-link {
+            padding: 14px 18px;
+        }
+        
+        .notification-link span {
+            font-size: 20px;
+        }
+        
+        .notification-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        /* Logo in nav */
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 25px;
+            margin-right: 20px;
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            border-radius: 30px;
+            color: white;
+            font-weight: 700;
+            font-size: 20px;
+            border: 2px solid white;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-logo span {
+            font-size: 24px;
+        }
+
+        /* Dashboard Content */
+        .dashboard-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Balance Card */
+        .balance-card {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            border-radius: 20px;
+            padding: 40px;
+            color: white;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            border: 3px solid white;
+        }
+
+        .balance-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            animation: shimmer 3s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .balance-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .balance-title {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .balance-amount {
+            font-size: 48px;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .balance-currency {
+            font-size: 24px;
+            opacity: 0.8;
+        }
+
+        /* Timer Section */
+        .timer-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .ratio-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .ratio-bar {
+            width: 200px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .ratio-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00c853, #69f0ae);
+            border-radius: 6px;
+            transition: width 0.5s ease;
+            width: 80%;
+        }
+
+        .ratio-text {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .timer-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 15px 25px;
+            border-radius: 12px;
+        }
+
+        .timer-icon {
+            font-size: 24px;
+        }
+
+        .timer-text {
+            font-size: 28px;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+        }
+
+        /* Mining Status */
+        .mining-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 25px;
+            position: relative;
+            z-index: 1;
+            background: rgba(0,0,0,0.2);
+            padding: 15px 25px;
+            border-radius: 15px;
+            width: fit-content;
+        }
+
+        .status-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #666;
+            border: 3px solid white;
+        }
+
+        .status-dot.active {
+            background: #00c853;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(0, 200, 83, 0.7); }
+            50% { box-shadow: 0 0 0 15px rgba(0, 200, 83, 0); }
+        }
+
+        .status-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #00c853;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Start Mining Button */
+        .mining-btn-container {
+            text-align: center;
+            margin-top: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .start-mining-btn {
+            padding: 18px 60px;
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            background: linear-gradient(135deg, #00c853 0%, #69f0ae 100%);
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 10px 30px rgba(0, 200, 83, 0.4);
+        }
+
+        .start-mining-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 200, 83, 0.5);
+        }
+
+        .start-mining-btn:disabled {
+            background: linear-gradient(135deg, #666 0%, #888 100%);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Info Cards */
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            border: 2px solid white;
+            border-radius: 15px;
+            padding: 25px;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+
+        .info-card h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .info-card .value {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        /* Mining Progress Bar */
+        .progress-container {
+            margin-top: 25px;
+            position: relative;
+            z-index: 1;
+            background: rgba(0,0,0,0.2);
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00c853, #69f0ae);
+            border-radius: 6px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #00c853;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-link {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+
+            .balance-card {
+                padding: 25px;
+            }
+
+            .balance-amount {
+                font-size: 36px;
+            }
+
+            .timer-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .ratio-bar {
+                width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-logo">
+            <span>💎</span> Nexora
+        </div>
+        <ul class="nav-links">
+            <li class="nav-item">
+                <a href="notification.html" class="nav-link notification-link">
+                    <span>🔔</span> Notifications
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="dashboard.html" class="nav-link active">
+                    <span>🏠</span> Home
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="invite.html" class="nav-link">
+                    <span>📨</span> Invite
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="reward.html" class="nav-link">
+                    <span>🎁</span> Reward
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="profile.html" class="nav-link">
+                    <span>👤</span> Profile
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="dashboard-content">
+        <!-- Balance Card -->
+        <div class="balance-card">
+            <div class="balance-header">
+                <div>
+                    <div class="balance-title">Total Balance</div>
+                    <div class="balance-amount">
+                        <span id="balanceAmount">0.00</span>
+                        <span class="balance-currency">NXC</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timer-section">
+                <div class="ratio-section">
+                    <span style="font-size: 16px; opacity: 0.8;">Mining Ratio:</span>
+                    <div class="ratio-bar">
+                        <div class="ratio-fill" id="ratioFill"></div>
+                    </div>
+                    <span class="ratio-text" id="ratioText">80%</span>
+                </div>
+
+                <div class="timer-box">
+                    <span class="timer-icon">⏱️</span>
+                    <span class="timer-text" id="timerDisplay">12:00:00</span>
+                </div>
+            </div>
+
+            <div class="mining-status">
+                <div class="status-dot" id="statusDot"></div>
+                <span class="status-text" id="statusText">Ready to Mine</span>
+            </div>
+
+            <div class="progress-container" id="progressContainer" style="display: none;">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text" id="progressText">Mining in progress...</div>
+            </div>
+
+            <div class="mining-btn-container">
+                <button class="start-mining-btn" id="startMiningBtn" onclick="startMining()">
+                    ⛏️ Start Mining
+                </button>
+            </div>
+        </div>
+
+        <!-- Info Cards -->
+        <div class="info-cards">
+            <div class="info-card">
+                <h3>Total Mined</h3>
+                <div class="value" id="totalMined">0.00 NXC</div>
+            </div>
+            <div class="info-card">
+                <h3>Pending Rewards</h3>
+                <div class="value" id="pendingRewards">0.00 NXC</div>
+            </div>
+            <div class="info-card">
+                <h3>Mining Sessions</h3>
+                <div class="value" id="miningSessions">0</div>
+            </div>
+            <div class="info-card">
+                <h3>Total Ratio</h3>
+                <div class="value">80%</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Store current page before going offline
+        function storeCurrentPage() {
+            sessionStorage.setItem('nexora_redirect_page', window.location.href);
+        }
+
+        // Listen for offline event - redirect to nointernet.html
+        window.addEventListener('offline', function() {
+            storeCurrentPage();
+            window.location.href = 'nointernet.html';
+        });
+
+        // Check for internet connectivity on page load
+        function checkInternetConnection() {
+            if (!navigator.onLine) {
+                storeCurrentPage();
+                window.location.href = 'nointernet.html';
+                return false;
+            }
+            
+            // Try to fetch a resource to verify actual internet connectivity
+            fetch('https://www.google.com/generate_204', { method: 'HEAD', mode: 'no-cors' })
+                .then(function() {
+                    // Internet is working
+                })
+                .catch(function() {
+                    // No internet connection
+                    storeCurrentPage();
+                    window.location.href = 'nointernet.html';
+                });
+        }
+
+        // Initial check on page load
+        checkInternetConnection();
+
+        // Periodic check every 5 seconds
+        setInterval(checkInternetConnection, 5000);
+
+        window.addEventListener('online', function() {
+            // Already handled by nointernet.html
+        });
+
+        // Mining Configuration
+        const MINING_DURATION = 12 * 60 * 60; // 12 hours in seconds
+        const TOTAL_REWARD = 80; // Total coins to reward
+        
+        // State variables
+        let balance = parseFloat(localStorage.getItem('totalBalance')) || 0;
+        let isMining = false;
+        
+        let miningStartTime = null;
+        let miningInterval = null;
+        let remainingTime = MINING_DURATION;
+
+        // Load saved data on startup
+        function loadSavedData() {
+            const savedBalance = parseFloat(localStorage.getItem('totalBalance')) || 0;
+            const savedSessions = parseInt(localStorage.getItem('miningSessions')) || 0;
+            
+            // Load reward data and pending rewards
+            const rewardData = JSON.parse(localStorage.getItem('nexora_rewards') || '{"totalClaimed": 0, "pendingRewards": 0}');
+            const dashboardData = JSON.parse(localStorage.getItem('nexora_dashboard') || '{"totalBalance": 0, "pendingRewards": 0}');
+            
+            // Combine mining balance with rewards total
+            balance = savedBalance + rewardData.totalClaimed;
+            balanceAmount.textContent = balance.toFixed(2);
+            totalMined.textContent = balance.toFixed(2) + ' NXC';
+            miningSessions.textContent = savedSessions;
+            
+            // Load pending rewards from reward system
+            const pending = dashboardData.pendingRewards || 0;
+            pendingRewards.textContent = pending.toFixed(2) + ' NXC';
+            
+            // Load mining state from localStorage
+            const savedMiningState = localStorage.getItem('isMining');
+            const savedStartTime = localStorage.getItem('miningStartTime');
+            
+            // Load remaining time from localStorage
+            const savedTime = localStorage.getItem('remainingTime');
+            if (savedTime) {
+                remainingTime = parseInt(savedTime);
+                updateTimer();
+            }
+            
+            // Check if mining was in progress and resume it
+            if (savedMiningState === 'true' && savedStartTime) {
+                miningStartTime = parseInt(savedStartTime);
+                const elapsedSeconds = Math.floor((Date.now() - miningStartTime) / 1000);
+                
+                // If mining duration hasn't expired, resume mining
+                if (elapsedSeconds < MINING_DURATION) {
+                    // Show the progress container
+                    progressContainer.style.display = 'block';
+                    
+                    // Resume mining with the saved start time
+                    isMining = true;
+                    miningStartTime = parseInt(savedStartTime);
+                    
+                    // Update UI to show mining is active
+                    statusDot.classList.add('active');
+                    statusText.textContent = 'Mining in Progress';
+                    startMiningBtn.disabled = true;
+                    startMiningBtn.textContent = '⛏️ Mining...';
+                    
+                    // Start mining interval
+                    startMiningInterval();
+                } else {
+                    // Mining completed while away - complete it
+                    balance = TOTAL_REWARD;
+                    balanceAmount.textContent = balance.toFixed(2);
+                    totalMined.textContent = balance.toFixed(2) + ' NXC';
+                    pendingRewards.textContent = '0.00 NXC';
+                    localStorage.setItem('totalBalance', balance.toFixed(2));
+                    localStorage.setItem('isMining', 'false');
+                    
+                    // Reset progress bar to complete
+                    progressFill.style.width = '100%';
+                    progressText.textContent = 'Mining Complete! 80.00 NXC earned.';
+                }
+            }
+        }
+
+        // DOM Elements
+        const balanceAmount = document.getElementById('balanceAmount');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const startMiningBtn = document.getElementById('startMiningBtn');
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        const totalMined = document.getElementById('totalMined');
+        const pendingRewards = document.getElementById('pendingRewards');
+        const miningSessions = document.getElementById('miningSessions');
+
+        // Format time as HH:MM:SS
+        function formatTime(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Update timer display
+        function updateTimer() {
+            timerDisplay.textContent = formatTime(remainingTime);
+        }
+
+        // Calculate current reward based on elapsed time
+        function calculateCurrentReward(elapsedSeconds) {
+            // Reward schedule: 1h=12, 2h=22, 3h=33, 4h=40, 5h=55, 6h=60, 7h=65, 8h=70, 9h=71, 10h=75, 11h=78, 12h=80
+            const oneHour = 3600;
+            const twoHours = 7200;
+            const threeHours = 10800;
+            const fourHours = 14400;
+            const fiveHours = 18000;
+            const sixHours = 21600;
+            const sevenHours = 25200;
+            const eightHours = 28800;
+            const nineHours = 32400;
+            const tenHours = 36000;
+            const elevenHours = 39600;
+            const twelveHours = 43200;
+            
+            if (elapsedSeconds < oneHour) return 12;
+            if (elapsedSeconds < twoHours) return 22;
+            if (elapsedSeconds < threeHours) return 33;
+            if (elapsedSeconds < fourHours) return 40;
+            if (elapsedSeconds < fiveHours) return 55;
+            if (elapsedSeconds < sixHours) return 60;
+            if (elapsedSeconds < sevenHours) return 65;
+            if (elapsedSeconds < eightHours) return 70;
+            if (elapsedSeconds < nineHours) return 71;
+            if (elapsedSeconds < tenHours) return 75;
+            if (elapsedSeconds < elevenHours) return 78;
+            
+            return TOTAL_REWARD; // 80 coins after 12 hours
+        }
+
+        // Start mining function
+        function startMining(resumeFromTime = null) {
+            if (isMining) return;
+
+            isMining = true;
+            // If resuming, use the saved start time; otherwise set new start time
+            miningStartTime = resumeFromTime || Date.now();
+            
+            // Disable button
+            startMiningBtn.disabled = true;
+            startMiningBtn.textContent = '⛏️ Mining...';
+            
+            // Update status
+            statusDot.classList.add('active');
+            statusText.textContent = 'Mining in Progress';
+            progressContainer.style.display = 'block';
+            
+            // Set remaining time to 12 hours
+            remainingTime = MINING_DURATION;
+            
+            // Update pending rewards
+            pendingRewards.textContent = TOTAL_REWARD.toFixed(2) + ' NXC';
+            
+            // Increment mining sessions only if not resuming
+            if (!resumeFromTime) {
+                let sessions = parseInt(miningSessions.textContent) || 0;
+                miningSessions.textContent = sessions + 1;
+                localStorage.setItem('miningSessions', miningSessions.textContent);
+            }
+            
+            // Start mining interval
+            miningInterval = setInterval(() => {
+                const elapsedSeconds = Math.floor((Date.now() - miningStartTime) / 1000);
+                remainingTime = Math.max(0, MINING_DURATION - elapsedSeconds);
+                
+                // Update timer
+                updateTimer();
+                
+                // Update balance based on elapsed time
+                const currentReward = calculateCurrentReward(elapsedSeconds);
+                balance = currentReward;
+                balanceAmount.textContent = balance.toFixed(2);
+                
+                // Update total mined
+                totalMined.textContent = balance.toFixed(2) + ' NXC';
+                
+                // Update pending rewards
+                pendingRewards.textContent = (TOTAL_REWARD - balance).toFixed(2) + ' NXC';
+                
+                // Save to localStorage during mining
+                localStorage.setItem('totalBalance', balance.toFixed(2));
+                localStorage.setItem('remainingTime', remainingTime.toString());
+                localStorage.setItem('miningStartTime', miningStartTime.toString());
+                localStorage.setItem('isMining', 'true');
+                
+                // Update progress bar
+                const progress = (elapsedSeconds / MINING_DURATION) * 100;
+                progressFill.style.width = Math.min(progress, 100) + '%';
+                progressText.textContent = `Mining Progress: ${progress.toFixed(1)}%`;
+                
+                // Check if mining is complete
+                if (remainingTime <= 0) {
+                    stopMining();
+                }
+            }, 1000);
+            
+            // Immediately update balance display
+            const initialElapsed = Math.floor((Date.now() - miningStartTime) / 1000);
+            const initialReward = calculateCurrentReward(initialElapsed);
+            balance = initialReward;
+            balanceAmount.textContent = balance.toFixed(2);
+            totalMined.textContent = balance.toFixed(2) + ' NXC';
+            pendingRewards.textContent = (TOTAL_REWARD - balance).toFixed(2) + ' NXC';
+            
+            const initialProgress = (initialElapsed / MINING_DURATION) * 100;
+            progressFill.style.width = Math.min(initialProgress, 100) + '%';
+            progressText.textContent = `Mining Progress: ${initialProgress.toFixed(1)}%`;
+        }
+        
+        // Separate function to start mining interval (used when resuming)
+        function startMiningInterval() {
+            // Immediately update balance and progress when resuming
+            const elapsedSeconds = Math.floor((Date.now() - miningStartTime) / 1000);
+            remainingTime = Math.max(0, MINING_DURATION - elapsedSeconds);
+            
+            // Update timer immediately
+            updateTimer();
+            
+            // Update balance immediately
+            const currentReward = calculateCurrentReward(elapsedSeconds);
+            balance = currentReward;
+            balanceAmount.textContent = balance.toFixed(2);
+            
+            // Update total mined immediately
+            totalMined.textContent = balance.toFixed(2) + ' NXC';
+            
+            // Update pending rewards immediately
+            pendingRewards.textContent = (TOTAL_REWARD - balance).toFixed(2) + ' NXC';
+            
+            // Update progress bar immediately
+            const progress = (elapsedSeconds / MINING_DURATION) * 100;
+            progressFill.style.width = Math.min(progress, 100) + '%';
+            progressText.textContent = `Mining Progress: ${progress.toFixed(1)}%`;
+            
+            // Save current state to localStorage
+            localStorage.setItem('totalBalance', balance.toFixed(2));
+            localStorage.setItem('remainingTime', remainingTime.toString());
+            
+            // Start the interval
+            miningInterval = setInterval(() => {
+                const elapsedSeconds = Math.floor((Date.now() - miningStartTime) / 1000);
+                remainingTime = Math.max(0, MINING_DURATION - elapsedSeconds);
+                
+                // Update timer
+                updateTimer();
+                
+                // Update balance based on elapsed time
+                const currentReward = calculateCurrentReward(elapsedSeconds);
+                balance = currentReward;
+                balanceAmount.textContent = balance.toFixed(2);
+                
+                // Update total mined
+                totalMined.textContent = balance.toFixed(2) + ' NXC';
+                
+                // Update pending rewards
+                pendingRewards.textContent = (TOTAL_REWARD - balance).toFixed(2) + ' NXC';
+                
+                // Save to localStorage during mining
+                localStorage.setItem('totalBalance', balance.toFixed(2));
+                localStorage.setItem('remainingTime', remainingTime.toString());
+                localStorage.setItem('miningStartTime', miningStartTime.toString());
+                localStorage.setItem('isMining', 'true');
+                
+                // Update progress bar
+                const progress = (elapsedSeconds / MINING_DURATION) * 100;
+                progressFill.style.width = Math.min(progress, 100) + '%';
+                progressText.textContent = `Mining Progress: ${progress.toFixed(1)}%`;
+                
+                // Check if mining is complete
+                if (remainingTime <= 0) {
+                    stopMining();
+                }
+            }, 1000);
+        }
+
+        // Stop mining function
+        function stopMining() {
+            isMining = false;
+            clearInterval(miningInterval);
+            
+            // Set balance to exactly 80
+            balance = TOTAL_REWARD;
+            balanceAmount.textContent = balance.toFixed(2);
+            totalMined.textContent = balance.toFixed(2) + ' NXC';
+            pendingRewards.textContent = '0.00 NXC';
+            
+            // Save to localStorage
+            localStorage.setItem('totalBalance', balance.toFixed(2));
+            localStorage.setItem('miningSessions', miningSessions.textContent);
+            localStorage.setItem('remainingTime', MINING_DURATION.toString());
+            localStorage.setItem('isMining', 'false');
+            
+            // Reset button
+            startMiningBtn.disabled = false;
+            startMiningBtn.textContent = '⛏️ Start Mining';
+            
+            // Reset status
+            statusDot.classList.remove('active');
+            statusText.textContent = 'Mining Complete';
+            
+            // Reset progress
+            progressFill.style.width = '100%';
+            progressText.textContent = 'Mining Complete! 80.00 NXC earned.';
+            
+            // Reset timer
+            remainingTime = MINING_DURATION;
+            updateTimer();
+        }
+
+        // Initialize display
+        loadSavedData();
+        updateTimer();
+    </script>
+</body>
+</html>

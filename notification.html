@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="Favicon.png" type="image/png">
+    <title>Notifications - Nexora</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: #808080;
+            padding: 20px;
+        }
+
+        /* Navigation Bar Styles */
+        .navbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 50px;
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            border-bottom: 3px solid white;
+            margin-bottom: 30px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 8px;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 30px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            color: white;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            border: 2px solid white;
+        }
+
+        /* Navigation Animation */
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .nav-link:hover::after {
+            width: 50%;
+        }
+
+        .nav-link.active::after {
+            width: 70%;
+        }
+
+        /* Back Button */
+        .back-link {
+            padding: 14px 18px;
+        }
+        
+        .back-link span {
+            font-size: 20px;
+        }
+        
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        /* Logo in nav */
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 25px;
+            margin-right: 20px;
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            border-radius: 30px;
+            color: white;
+            font-weight: 700;
+            font-size: 20px;
+            border: 2px solid white;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-logo span {
+            font-size: 24px;
+        }
+
+        /* Main Container */
+        .notifications-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .notifications-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            border: 2px solid white;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .notifications-header h1 {
+            color: white;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .notifications-header p {
+            color: rgba(255,255,255,0.7);
+            font-size: 16px;
+        }
+
+        .notification-count {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        /* Notification Cards */
+        .notification-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .notification-card {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            border-radius: 15px;
+            padding: 20px 25px;
+            border: 2px solid white;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notification-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+        }
+
+        .notification-card.unread {
+            border-color: #667eea;
+        }
+
+        .notification-card.unread::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .notification-icon {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .notification-icon.user-added {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .notification-icon.password-reset {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .notification-icon.reward-claimed {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .notification-icon.team-member-added {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .notification-icon.mining-started {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            color: white;
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .notification-message {
+            color: rgba(255,255,255,0.75);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .notification-time {
+            color: rgba(255,255,255,0.5);
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .notification-badge.new {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .notification-badge.today {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        .notification-badge.yesterday {
+            background: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* Empty State */
+        .empty-notifications {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            border-radius: 20px;
+            border: 2px solid white;
+        }
+
+        .empty-notifications span {
+            font-size: 60px;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        .empty-notifications h3 {
+            color: white;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .empty-notifications p {
+            color: rgba(255,255,255,0.6);
+            font-size: 16px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 15px;
+                border-radius: 20px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-link {
+                padding: 10px 15px;
+                font-size: 13px;
+            }
+
+            .nav-logo {
+                font-size: 20px;
+            }
+
+            .notification-card {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .notification-badge {
+                position: static;
+                margin-top: 10px;
+            }
+        }
+
+        /* Mark all as read button */
+        .mark-all-read {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 15px;
+        }
+
+        .mark-all-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mark-all-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-logo">
+            <span>💎</span> Nexora
+        </div>
+        <ul class="nav-links">
+            <li class="nav-item">
+                <a href="notification.html" class="nav-link active back-link">
+                    <span>🔔</span> Notifications
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="dashboard.html" class="nav-link">
+                    <span>🏠</span> Home
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="invite.html" class="nav-link">
+                    <span>📨</span> Invite
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="reward.html" class="nav-link">
+                    <span>🎁</span> Reward
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="profile.html" class="nav-link">
+                    <span>👤</span> Profile
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="notifications-container">
+        <!-- Header -->
+        <div class="notifications-header">
+            <h1>🔔 Notifications</h1>
+            <p>Stay updated with your account activities</p>
+            <span class="notification-count" id="notificationCount">5 New</span>
+        </div>
+
+        <!-- Mark all as read -->
+        <div class="mark-all-read">
+            <button class="mark-all-btn" onclick="markAllAsRead()">Mark All as Read</button>
+        </div>
+
+        <!-- Notification List -->
+        <div class="notification-list" id="notificationList">
+            <!-- New User Added -->
+            <div class="notification-card unread">
+                <span class="notification-badge new">New</span>
+                <div class="notification-icon user-added">👤</div>
+                <div class="notification-content">
+                    <div class="notification-title">New User Added</div>
+                    <div class="notification-message">A new user has joined Nexora using your referral link. Welcome to the community!</div>
+                    <div class="notification-time">Just now</div>
+                </div>
+            </div>
+
+            <!-- Password Reset -->
+            <div class="notification-card unread">
+                <span class="notification-badge new">New</span>
+                <div class="notification-icon password-reset">🔐</div>
+                <div class="notification-content">
+                    <div class="notification-title">Password Reset Successfully</div>
+                    <div class="notification-message">Your password has been reset successfully. Your account is now secure with the new password.</div>
+                    <div class="notification-time">Just now</div>
+                </div>
+            </div>
+
+            <!-- Reward Claimed -->
+            <div class="notification-card unread">
+                <span class="notification-badge new">New</span>
+                <div class="notification-icon reward-claimed">🎁</div>
+                <div class="notification-content">
+                    <div class="notification-title">Daily Reward Claimed!</div>
+                    <div class="notification-message">Congratulations! You have successfully claimed your daily reward. Keep mining to earn more!</div>
+                    <div class="notification-time">Just now</div>
+                </div>
+            </div>
+
+            <!-- Team Member Added -->
+            <div class="notification-card unread">
+                <span class="notification-badge new">New</span>
+                <div class="notification-icon team-member-added">👥</div>
+                <div class="notification-content">
+                    <div class="notification-title">Team Member Added</div>
+                    <div class="notification-message">A new member has joined your team. Together you can mine more and earn greater rewards!</div>
+                    <div class="notification-time">Just now</div>
+                </div>
+            </div>
+
+            <!-- Mining Started from Team Member -->
+            <div class="notification-card unread">
+                <span class="notification-badge new">New</span>
+                <div class="notification-icon mining-started">⛏️</div>
+                <div class="notification-content">
+                    <div class="notification-title">Team Mining Started</div>
+                    <div class="notification-message">One of your team members has started mining. Your team earnings are now increasing!</div>
+                    <div class="notification-time">Just now</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Store current page before going offline
+        function storeCurrentPage() {
+            sessionStorage.setItem('nexora_redirect_page', window.location.href);
+        }
+
+        // Listen for offline event - redirect to nointernet.html
+        window.addEventListener('offline', function() {
+            storeCurrentPage();
+            window.location.href = 'nointernet.html';
+        });
+
+        // Check for internet connectivity on page load
+        function checkInternetConnection() {
+            if (!navigator.onLine) {
+                storeCurrentPage();
+                window.location.href = 'nointernet.html';
+                return false;
+            }
+            
+            // Try to fetch a resource to verify actual internet connectivity
+            fetch('https://www.google.com/generate_204', { method: 'HEAD', mode: 'no-cors' })
+                .then(function() {
+                    // Internet is working
+                })
+                .catch(function() {
+                    // No internet connection
+                    storeCurrentPage();
+                    window.location.href = 'nointernet.html';
+                });
+        }
+
+        // Initial check on page load
+        checkInternetConnection();
+
+        // Periodic check every 5 seconds
+        setInterval(checkInternetConnection, 5000);
+
+        function markAllAsRead() {
+            const cards = document.querySelectorAll('.notification-card.unread');
+            cards.forEach(card => {
+                card.classList.remove('unread');
+            });
+            
+            const badges = document.querySelectorAll('.notification-badge.new');
+            badges.forEach(badge => {
+                badge.textContent = 'Today';
+                badge.classList.remove('new');
+                badge.classList.add('today');
+            });
+
+            document.getElementById('notificationCount').textContent = 'All Read';
+            
+            // Show confirmation
+            alert('All notifications marked as read!');
+        }
+    </script>
+</body>
+</html>

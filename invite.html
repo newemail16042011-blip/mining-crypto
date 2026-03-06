@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="Favicon.png" type="image/png">
+    <title>Invite & Team - Nexora</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: #808080;
+            padding: 20px;
+        }
+
+        /* Navigation Bar Styles */
+        .navbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 50px;
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            border-bottom: 3px solid white;
+            margin-bottom: 30px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 8px;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 30px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            color: white;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            border: 2px solid white;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .nav-link:hover::after {
+            width: 50%;
+        }
+
+        .nav-link.active::after {
+            width: 70%;
+        }
+
+        /* Logo in nav */
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 25px;
+            margin-right: 20px;
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            border-radius: 30px;
+            color: white;
+            font-weight: 700;
+            font-size: 20px;
+            border: 2px solid white;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-logo span {
+            font-size: 24px;
+        }
+
+        /* Notification Bell */
+        .notification-link {
+            padding: 14px 18px;
+        }
+        
+        .notification-link span {
+            font-size: 20px;
+        }
+
+        .notification-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        /* Main Content */
+        .invite-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* User Profile Card */
+        .profile-card {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(20px);
+            border: 2px solid white;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .profile-image-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+
+        .profile-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #667eea;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .profile-image-placeholder {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+            font-weight: 700;
+            border: 3px solid #667eea;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .upload-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #667eea;
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .upload-btn:hover {
+            transform: scale(1.1);
+            background: #764ba2;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-name {
+            font-size: 28px;
+            color: white;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .profile-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+            border: 1px solid rgba(46, 204, 113, 0.3);
+        }
+
+        .status-inactive {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .status-inactive:hover {
+            background: rgba(231, 76, 60, 0.3);
+            transform: scale(1.05);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Referral Link Section */
+        .referral-section {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            border-radius: 20px;
+            padding: 40px;
+            color: white;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid white;
+        }
+
+        .referral-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            animation: shimmer 3s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .referral-header {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .referral-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .referral-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .referral-link-container {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .referral-input-group {
+            flex: 1;
+            max-width: 500px;
+            min-width: 280px;
+        }
+
+        .referral-input {
+            width: 100%;
+            padding: 18px 25px;
+            border-radius: 15px;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.15);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+
+        .referral-input::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .referral-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(255,255,255,0.2);
+        }
+
+        .copy-btn, .share-btn {
+            padding: 18px 30px;
+            border-radius: 15px;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .copy-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .copy-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.5);
+        }
+
+        .copy-btn.copied {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        }
+
+        .share-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .share-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-3px);
+        }
+
+        /* Share Options */
+        .share-options {
+            position: relative;
+            z-index: 1;
+            display: none;
+            margin-top: 20px;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .share-options.show {
+            display: flex;
+        }
+
+        .share-option {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .share-option:hover {
+            transform: scale(1.15);
+        }
+
+        .share-whatsapp {
+            background: #25D366;
+        }
+
+        .share-facebook {
+            background: #1877F2;
+        }
+
+        .share-twitter {
+            background: #1DA1F2;
+        }
+
+        .share-telegram {
+            background: #0088cc;
+        }
+
+        /* Team Section */
+        .team-section {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(20px);
+            border: 2px solid white;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .team-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .team-title {
+            font-size: 24px;
+            color: white;
+            font-weight: 700;
+        }
+
+        .team-count {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .team-member-card {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 2px solid rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .team-member-card:hover {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            border-color: white;
+        }
+
+        .team-member-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #667eea;
+        }
+
+        .team-member-img-placeholder {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            font-weight: 700;
+            border: 2px solid #667eea;
+        }
+
+        .team-member-info {
+            flex: 1;
+        }
+
+        .team-member-name {
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .team-member-country {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: rgba(255,255,255,0.7);
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .country-flag {
+            font-size: 16px;
+        }
+
+        .team-member-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+        }
+
+        .team-member-status.active {
+            color: #2ecc71;
+        }
+
+        .team-member-status.inactive {
+            color: #e74c3c;
+        }
+
+        .member-bell {
+            cursor: pointer;
+            margin-left: 8px;
+            font-size: 14px;
+            transition: transform 0.2s ease;
+        }
+
+        .member-bell:hover {
+            transform: scale(1.2);
+        }
+
+        .team-empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .team-empty-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .team-empty-text {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .team-empty-subtext {
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        /* Bonus Section */
+        .bonus-section {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            border: 2px solid white;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .bonus-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .bonus-title {
+            color: white;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .bonus-subtitle {
+            color: rgba(255,255,255,0.7);
+            font-size: 16px;
+        }
+
+        .bonus-cards {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .bonus-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            border-radius: 15px;
+            padding: 25px 30px;
+            text-align: center;
+            border: 2px solid white;
+            min-width: 150px;
+            transition: all 0.3s ease;
+        }
+
+        .bonus-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .bonus-icon {
+            font-size: 35px;
+            margin-bottom: 12px;
+        }
+
+        .bonus-amount {
+            color: #667eea;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .bonus-label {
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+        }
+
+        .bonus-info {
+            background: rgba(0,0,0,0.2);
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .bonus-info p {
+            color: rgba(255,255,255,0.8);
+            font-size: 14px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Notification Toast */
+        .notification-toast {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            display: none;
+            align-items: center;
+            gap: 15px;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+
+        .notification-toast.show {
+            display: flex;
+        }
+
+        .notification-toast.success {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Hidden file input */
+        #profileUpload {
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px 20px;
+                flex-wrap: wrap;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .profile-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-status {
+                justify-content: center;
+            }
+
+            .referral-link-container {
+                flex-direction: column;
+            }
+
+            .referral-input-group {
+                width: 100%;
+            }
+
+            .copy-btn, .share-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-logo">
+            <span>💎</span> Nexora
+        </div>
+        <ul class="nav-links">
+            <li class="nav-item">
+                <a href="notification.html" class="nav-link notification-link">
+                    <span>🔔</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="dashboard.html" class="nav-link">
+                    <span>🏠</span> Home
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="invite.html" class="nav-link active">
+                    <span>📨</span> Invite
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="reward.html" class="nav-link">
+                    <span>🎁</span> Reward
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="profile.html" class="nav-link">
+                    <span>👤</span> Profile
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="invite-content">
+        <!-- Referral Link Section -->
+        <div class="referral-section">
+            <div class="referral-header">
+                <h2 class="referral-title">🎁 Invite Friends & Earn</h2>
+                <p class="referral-subtitle">Share your referral link and earn rewards for every friend who joins!</p>
+            </div>
+            <div class="referral-link-container">
+                <div class="referral-input-group">
+                    <input type="text" class="referral-input" id="referralLink" readonly placeholder="Your referral link will appear here...">
+                </div>
+                <button class="copy-btn" id="copyBtn" onclick="copyReferralLink()">
+                    <span>📋</span> Copy Link
+                </button>
+                <button class="share-btn" onclick="toggleShareOptions()">
+                    <span>📤</span> Share
+                </button>
+            </div>
+            <div class="share-options" id="shareOptions">
+                <button class="share-option share-whatsapp" onclick="shareOnWhatsApp()" title="Share on WhatsApp">💬</button>
+                <button class="share-option share-facebook" onclick="shareOnFacebook()" title="Share on Facebook">📘</button>
+                <button class="share-option share-twitter" onclick="shareOnTwitter()" title="Share on Twitter">🐦</button>
+                <button class="share-option share-telegram" onclick="shareOnTelegram()" title="Share on Telegram">✈️</button>
+            </div>
+        </div>
+
+        <!-- Referral Bonus Section -->
+        <div class="bonus-section">
+            <div class="bonus-header">
+                <h2 class="bonus-title">🎁 Referral Bonus</h2>
+                <p class="bonus-subtitle">Earn NXC for every friend you invite!</p>
+            </div>
+            <div class="bonus-cards">
+                <div class="bonus-card">
+                    <div class="bonus-icon">👤</div>
+                    <div class="bonus-amount">10 NXC</div>
+                    <div class="bonus-label">Per Referral</div>
+                </div>
+                <div class="bonus-card">
+                    <div class="bonus-icon">👥</div>
+                    <div class="bonus-amount">5 NXC</div>
+                    <div class="bonus-label">Team Bonus</div>
+                </div>
+                <div class="bonus-card">
+                    <div class="bonus-icon">⛏️</div>
+                    <div class="bonus-amount">2%</div>
+                    <div class="bonus-label">Mining Share</div>
+                </div>
+            </div>
+            <div class="bonus-info">
+                <p>📌 Bonus is credited when your referral makes their first deposit</p>
+                <p>📌 Team bonus is added when your team members start mining</p>
+                <p>📌 You earn 2% of all mining rewards from your team</p>
+            </div>
+        </div>
+
+        <!-- Team Section -->
+        <div class="team-section">
+            <div class="team-header">
+                <h2 class="team-title">👥 Your Team</h2>
+                <span class="team-count" id="teamCount">0 Members</span>
+            </div>
+            <div class="team-grid" id="teamGrid">
+                <!-- Team members will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="notification-toast" id="notificationToast">
+        <span id="toastIcon">✅</span>
+        <span id="toastMessage">Notification sent!</span>
+    </div>
+
+    <script>
+        // Store current page before going offline
+        function storeCurrentPage() {
+            sessionStorage.setItem('nexora_redirect_page', window.location.href);
+        }
+
+        // Listen for offline event - redirect to nointernet.html
+        window.addEventListener('offline', function() {
+            storeCurrentPage();
+            window.location.href = 'nointernet.html';
+        });
+
+        // Check for internet connectivity on page load
+        function checkInternetConnection() {
+            if (!navigator.onLine) {
+                storeCurrentPage();
+                window.location.href = 'nointernet.html';
+                return false;
+            }
+            
+            // Try to fetch a resource to verify actual internet connectivity
+            fetch('https://www.google.com/generate_204', { method: 'HEAD', mode: 'no-cors' })
+                .then(function() {
+                    // Internet is working
+                })
+                .catch(function() {
+                    // No internet connection
+                    storeCurrentPage();
+                    window.location.href = 'nointernet.html';
+                });
+        }
+
+        // Initial check on page load
+        checkInternetConnection();
+
+        // Periodic check every 5 seconds
+        setInterval(checkInternetConnection, 5000);
+
+        window.addEventListener('online', function() {
+            // Already handled by nointernet.html
+        });
+
+        // Initialize user data
+        let currentUser = null;
+
+        // On page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            generateReferralLink();
+            loadTeamMembers();
+        });
+
+        // Load user data from localStorage
+        function loadUserData() {
+            // Get current logged in user from localStorage or create default
+            let userData = localStorage.getItem('currentUser');
+            
+            if (!userData) {
+                // Create default user for demo
+                userData = {
+                    username: 'User',
+                    email: 'user@example.com',
+                    referralCode: generateReferralCode(),
+                    profilePic: null,
+                    isActive: false,
+                    joinedDate: new Date().toISOString()
+                };
+                localStorage.setItem('currentUser', JSON.stringify(userData));
+            } else {
+                userData = JSON.parse(userData);
+            }
+            
+            currentUser = userData;
+            
+            // Initialize users list if not exists
+            if (!localStorage.getItem('usersList')) {
+                localStorage.setItem('usersList', JSON.stringify([userData]));
+            }
+        }
+
+        // Generate unique referral code
+        function generateReferralCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let code = 'NEX';
+            for (let i = 0; i < 8; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+
+        // Generate and display referral link
+        function generateReferralLink() {
+            if (currentUser) {
+                const referralCode = currentUser.referralCode || generateReferralCode();
+                const link = `${window.location.origin}${window.location.pathname.replace('invite.html', 'signup.html')}?ref=${referralCode}`;
+                document.getElementById('referralLink').value = link;
+            }
+        }
+
+        // Copy referral link to clipboard
+        function copyReferralLink() {
+            const referralLink = document.getElementById('referralLink').value;
+            const copyBtn = document.getElementById('copyBtn');
+            
+            if (referralLink) {
+                navigator.clipboard.writeText(referralLink).then(() => {
+                    copyBtn.innerHTML = '<span>✅</span> Copied!';
+                    copyBtn.classList.add('copied');
+                    
+                    setTimeout(() => {
+                        copyBtn.innerHTML = '<span>📋</span> Copy Link';
+                        copyBtn.classList.remove('copied');
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                    // Fallback for older browsers
+                    const textArea = document.createElement('textarea');
+                    textArea.value = referralLink;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    
+                    copyBtn.innerHTML = '<span>✅</span> Copied!';
+                    copyBtn.classList.add('copied');
+                    
+                    setTimeout(() => {
+                        copyBtn.innerHTML = '<span>📋</span> Copy Link';
+                        copyBtn.classList.remove('copied');
+                    }, 2000);
+                });
+            }
+        }
+
+        // Toggle share options
+        function toggleShareOptions() {
+            const shareOptions = document.getElementById('shareOptions');
+            if (shareOptions.style.display === 'flex') {
+                shareOptions.style.display = 'none';
+            } else {
+                shareOptions.style.display = 'flex';
+            }
+        }
+
+        // Share on WhatsApp
+        function shareOnWhatsApp() {
+            const link = document.getElementById('referralLink').value;
+            const text = encodeURIComponent('Join Nexora and start earning! Use my referral link: ' + link);
+            window.open('https://wa.me/?text=' + text, '_blank');
+        }
+
+        // Share on Facebook
+        function shareOnFacebook() {
+            const link = document.getElementById('referralLink').value;
+            window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(link), '_blank');
+        }
+
+        // Share on Twitter
+        function shareOnTwitter() {
+            const link = document.getElementById('referralLink').value;
+            const text = encodeURIComponent('Join Nexora and start earning! Use my referral link: ' + link);
+            window.open('https://twitter.com/intent/tweet?text=' + text + '&url=' + encodeURIComponent(link), '_blank');
+        }
+
+        // Share on Telegram
+        function shareOnTelegram() {
+            const link = document.getElementById('referralLink').value;
+            const text = encodeURIComponent('Join Nexora and start earning! Use my referral link: ' + link);
+            window.open('https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + text, '_blank');
+        }
+
+        // Handle profile picture upload
+        function handleProfileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imageData = e.target.result;
+                    
+                    // Update current user
+                    if (currentUser) {
+                        currentUser.profilePic = imageData;
+                        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                        
+                        // Update users list
+                        let usersList = JSON.parse(localStorage.getItem('usersList') || '[]');
+                        const userIndex = usersList.findIndex(u => u.email === currentUser.email);
+                        if (userIndex !== -1) {
+                            usersList[userIndex].profilePic = imageData;
+                            localStorage.setItem('usersList', JSON.stringify(usersList));
+                        }
+                        
+                        // Update UI
+                        document.getElementById('profileImage').src = imageData;
+                        document.getElementById('profileImage').style.display = 'block';
+                        document.getElementById('profilePlaceholder').style.display = 'none';
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Update user status display
+        function updateUserStatus(isActive) {
+            const statusBadge = document.getElementById('statusBadge');
+            const inactiveBell = document.getElementById('inactiveBell');
+            
+            if (isActive) {
+                statusBadge.className = 'status-badge status-active';
+                statusBadge.innerHTML = '<span class="status-dot"></span> Active';
+                statusBadge.style.display = 'flex';
+                inactiveBell.style.display = 'none';
+            } else {
+                statusBadge.className = 'status-badge status-inactive';
+                statusBadge.innerHTML = '<span class="status-dot"></span> Inactive';
+                statusBadge.style.display = 'flex';
+                inactiveBell.style.display = 'flex';
+            }
+        }
+
+        // Send activation notification (for user's own status)
+        function sendActivationNotification() {
+            // Show notification toast
+            const toast = document.getElementById('notificationToast');
+            const toastMessage = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+            
+            toast.classList.add('show', 'success');
+            toastIcon.textContent = '🔔';
+            toastMessage.textContent = 'Activation notification sent to user!';
+            
+            // Update user status to active
+            if (currentUser) {
+                currentUser.isActive = true;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                
+                // Update users list
+                let usersList = JSON.parse(localStorage.getItem('usersList') || '[]');
+                const userIndex = usersList.findIndex(u => u.email === currentUser.email);
+                if (userIndex !== -1) {
+                    usersList[userIndex].isActive = true;
+                    localStorage.setItem('usersList', JSON.stringify(usersList));
+                }
+                
+                updateUserStatus(true);
+            }
+            
+            // Hide toast after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show', 'success');
+            }, 3000);
+        }
+
+        // Load team members (users who joined via current user's referral)
+        function loadTeamMembers() {
+            const teamGrid = document.getElementById('teamGrid');
+            const teamCount = document.getElementById('teamCount');
+            
+            let usersList = JSON.parse(localStorage.getItem('usersList') || '[]');
+            
+            // Filter users who joined via current user's referral
+            let teamMembers = [];
+            
+            // Ensure currentUser has referralCode
+            if (!currentUser) {
+                currentUser = {
+                    username: 'User',
+                    email: 'user@example.com',
+                    referralCode: generateReferralCode(),
+                    profilePic: null,
+                    isActive: false
+                };
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            }
+            
+            if (currentUser && currentUser.referralCode) {
+                teamMembers = usersList.filter(u => 
+                    u.referredBy === currentUser.referralCode && 
+                    u.email !== currentUser.email
+                );
+            }
+            
+            // If no team members, create some demo team members
+            if (teamMembers.length === 0) {
+                teamMembers = createDemoTeamMembers();
+            }
+            
+            teamCount.textContent = `${teamMembers.length} Member${teamMembers.length !== 1 ? 's' : ''}`;
+            
+            if (teamMembers.length === 0) {
+                teamGrid.innerHTML = `
+                    <div class="team-empty">
+                        <div class="team-empty-icon">👥</div>
+                        <div class="team-empty-text">No team members yet</div>
+                        <div class="team-empty-subtext">Share your referral link to invite friends!</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Render team members
+            teamGrid.innerHTML = teamMembers.map(member => `
+                <div class="team-member-card">
+                    ${member.profilePic 
+                        ? `<img src="${member.profilePic}" alt="${member.username}" class="team-member-img">`
+                        : `<div class="team-member-img-placeholder">${(member.username || 'U').charAt(0).toUpperCase()}</div>`
+                    }
+                    <div class="team-member-info">
+                        <div class="team-member-name">${member.username || 'Unknown User'}</div>
+                        <div class="team-member-country">
+                            <span class="country-flag">${getCountryFlag(member.countryCode)}</span>
+                            ${member.country || 'Unknown'}
+                        </div>
+                        <div class="team-member-status ${member.isActive ? 'active' : 'inactive'}">
+                            <span class="status-dot"></span>
+                            ${member.isActive ? 'Active' : 'Inactive'}
+                            ${!member.isActive ? '<span class="member-bell" onclick="sendMemberActivation(\'' + member.email + '\')" title="Click to activate">🔔</span>' : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Create demo team members for demonstration
+        function createDemoTeamMembers() {
+            const demoMembers = [
+                {
+                    username: 'Alice Smith',
+                    email: 'alice@example.com',
+                    profilePic: null,
+                    isActive: true,
+                    country: 'United States',
+                    countryCode: 'US',
+                    referredBy: currentUser.referralCode
+                },
+                {
+                    username: 'Bob Johnson',
+                    email: 'bob@example.com',
+                    profilePic: null,
+                    isActive: true,
+                    country: 'United Kingdom',
+                    countryCode: 'GB',
+                    referredBy: currentUser.referralCode
+                },
+                {
+                    username: 'Carol Williams',
+                    email: 'carol@example.com',
+                    profilePic: null,
+                    isActive: false,
+                    country: 'Germany',
+                    countryCode: 'DE',
+                    referredBy: currentUser.referralCode
+                },
+                {
+                    username: 'David Chen',
+                    email: 'david@example.com',
+                    profilePic: null,
+                    isActive: true,
+                    country: 'China',
+                    countryCode: 'CN',
+                    referredBy: currentUser.referralCode
+                },
+                {
+                    username: 'Emma Wilson',
+                    email: 'emma@example.com',
+                    profilePic: null,
+                    isActive: false,
+                    country: 'France',
+                    countryCode: 'FR',
+                    referredBy: currentUser.referralCode
+                }
+            ];
+            
+            // Add demo members to users list
+            let usersList = JSON.parse(localStorage.getItem('usersList') || '[]');
+            usersList = [...usersList, ...demoMembers];
+            localStorage.setItem('usersList', JSON.stringify(usersList));
+            
+            return demoMembers;
+        }
+
+        // Show notifications
+        function showNotifications() {
+            const toast = document.getElementById('notificationToast');
+            const toastMessage = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+            
+            // Get team members who are inactive
+            let usersList = JSON.parse(localStorage.getItem('usersList') || '[]');
+            let teamMembers = [];
+            
+            if (currentUser && currentUser.referralCode) {
+                teamMembers = usersList.filter(u => 
+                    u.referredBy === currentUser.referralCode && 
+                    u.email !== currentUser.email
+                );
+            }
+            
+            const inactiveCount = teamMembers.filter(m => !m.isActive).length;
+            
+            toast.classList.add('show');
+            toastIcon.textContent = '🔔';
+            
+            if (inactiveCount > 0) {
+                toastMessage.textContent = `You have ${inactiveCount} inactive team member${inactiveCount !== 1 ? 's' : ''}!`;
+            } else {
+                toastMessage.textContent = 'All your team members are active! 🎉';
+            }
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Get country flag emoji from country code
+        function getCountryFlag(countryCode) {
+            if (!countryCode) return '🌍';
+            const codePoints = countryCode
+                .toUpperCase()
+                .split('')
+                .map(char => 127397 + char.charCodeAt(0));
+            return String.fromCodePoint(...codePoints);
+        }
+
+        // Send activation notification for a team member
+        function sendMemberActivation(email) {
+            const toast = document.getElementById('notificationToast');
+            const toastMessage = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+            
+            // Update user status in localStorage
+            let usersList = JSON.parse(localStorage.getItem('usersList') || '[]');
+            const userIndex = usersList.findIndex(u => u.email === email);
+            
+            if (userIndex !== -1) {
+                usersList[userIndex].isActive = true;
+                localStorage.setItem('usersList', JSON.stringify(usersList));
+                
+                toast.classList.add('show', 'success');
+                toastIcon.textContent = '✅';
+                toastMessage.textContent = 'Member activated! Mining started.';
+                
+                // Reload team members
+                loadTeamMembers();
+            }
+            
+            setTimeout(() => {
+                toast.classList.remove('show', 'success');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

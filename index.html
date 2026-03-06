@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="Favicon.png" type="image/png">
+    <title>Login - Nexora</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #808080;
+            padding: 20px;
+        }
+
+        .login-container {
+            display: flex;
+            width: 900px;
+            max-width: 100%;
+            background-color: #808080;
+            border: 3px solid white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .left-side {
+            flex: 1;
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .logo {
+            width: 250px;
+            height: 250px;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .left-side h1 {
+            color: white;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .left-side p {
+            color: #b8c5d6;
+            font-size: 16px;
+            line-height: 1.6;
+            max-width: 280px;
+        }
+
+        .right-side {
+            flex: 1;
+            background-color: #808080;
+            padding: 60px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .right-side h2 {
+            color: white;
+            font-size: 28px;
+            margin-bottom: 35px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            color: white;
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid white;
+            border-radius: 8px;
+            background-color: #808080;
+            color: white;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input::placeholder {
+            color: #cccccc;
+        }
+
+        .form-group input:focus {
+            border-color: #4a90d9;
+            box-shadow: 0 0 10px rgba(74, 144, 217, 0.3);
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            padding-right: 50px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: white;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        .toggle-password:hover {
+            color: #4a90d9;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 25px;
+        }
+
+        .forgot-password a {
+            color: white;
+            font-size: 14px;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password a:hover {
+            color: #4a90d9;
+            text-decoration: underline;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background-color: white;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .login-btn:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .signup-link {
+            text-align: center;
+            color: white;
+            font-size: 14px;
+        }
+
+        .signup-link a {
+            color: white;
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .signup-link a:hover {
+            color: #4a90d9;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .left-side {
+                padding: 40px 30px;
+            }
+
+            .logo {
+                width: 180px;
+                height: 180px;
+            }
+
+            .left-side h1 {
+                font-size: 24px;
+            }
+
+            .right-side {
+                padding: 40px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="left-side">
+            <div class="logo">
+                <img src="logo.png" alt="Nexora Logo">
+            </div>
+            <h1>Welcome to Nexora</h1>
+            <p>Mine Smarter. Grow Faster. Choose Nexora.</p>
+        </div>
+        
+        <div class="right-side">
+            <h2>Login</h2>
+            <form>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="Enter your email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" placeholder="Enter your password">
+                        <span class="toggle-password" onclick="togglePassword()">👁</span>
+                    </div>
+                </div>
+                
+                <div class="forgot-password">
+                    <a href="forgot.html">Forgot Password?</a>
+                </div>
+                
+                <button type="submit" class="login-btn" onclick="window.location.href='dashboard.html'; return false;">Login</button>
+                
+                <p class="signup-link">Don't have an account? <a href="signup.html">Sign Up</a></p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Store current page before going offline
+        function storeCurrentPage() {
+            sessionStorage.setItem('nexora_redirect_page', window.location.href);
+        }
+
+        // Listen for offline event - redirect to nointernet.html
+        window.addEventListener('offline', function() {
+            storeCurrentPage();
+            window.location.href = 'nointernet.html';
+        });
+
+        // Check for internet connectivity on page load
+        function checkInternetConnection() {
+            if (!navigator.onLine) {
+                storeCurrentPage();
+                window.location.href = 'nointernet.html';
+                return false;
+            }
+            
+            // Try to fetch a resource to verify actual internet connectivity
+            fetch('https://www.google.com/generate_204', { method: 'HEAD', mode: 'no-cors' })
+                .then(function() {
+                    // Internet is working
+                })
+                .catch(function() {
+                    // No internet connection
+                    storeCurrentPage();
+                    window.location.href = 'nointernet.html';
+                });
+        }
+
+        // Initial check on page load
+        checkInternetConnection();
+
+        // Periodic check every 5 seconds
+        setInterval(checkInternetConnection, 5000);
+
+        // Check if coming back online from nointernet page
+        window.addEventListener('online', function() {
+            // Already handled by nointernet.html
+        });
+
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleBtn = document.querySelector('.toggle-password');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleBtn.textContent = '👁‍🗨';
+            } else {
+                passwordInput.type = 'password';
+                toggleBtn.textContent = '👁';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="Favicon.png" type="image/png">
+    <title>Sign Up - Nexora</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #808080;
+            padding: 20px;
+        }
+
+        .signup-container {
+            display: flex;
+            width: 900px;
+            max-width: 100%;
+            background-color: #808080;
+            border: 3px solid white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .left-side {
+            flex: 1;
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .logo {
+            width: 250px;
+            height: 250px;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .left-side h1 {
+            color: white;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .left-side p {
+            color: #b8c5d6;
+            font-size: 16px;
+            line-height: 1.6;
+            max-width: 280px;
+        }
+
+        .right-side {
+            flex: 1;
+            background-color: #808080;
+            padding: 60px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .right-side h2 {
+            color: white;
+            font-size: 28px;
+            margin-bottom: 35px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            color: white;
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid white;
+            border-radius: 8px;
+            background-color: #808080;
+            color: white;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input::placeholder {
+            color: #cccccc;
+        }
+
+        .form-group input:focus {
+            border-color: #4a90d9;
+            box-shadow: 0 0 10px rgba(74, 144, 217, 0.3);
+        }
+
+        .form-group .error-message {
+            color: #ff6b6b;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .form-group input.error {
+            border-color: #ff6b6b;
+        }
+
+        .password-requirements {
+            color: #b8c5d6;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .optional-label {
+            color: #b8c5d6;
+            font-size: 12px;
+            font-style: italic;
+        }
+
+        .next-btn {
+            width: 100%;
+            padding: 16px;
+            background-color: white;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .next-btn:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: underline;
+            margin-bottom: 15px;
+        }
+
+        .back-btn:hover {
+            color: #4a90d9;
+        }
+
+        .login-link {
+            text-align: center;
+            color: white;
+            font-size: 14px;
+        }
+
+        .login-link a {
+            color: white;
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .login-link a:hover {
+            color: #4a90d9;
+            text-decoration: underline;
+        }
+
+        /* OTP Section */
+        .otp-section {
+            display: none;
+        }
+
+        .otp-inputs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .otp-input {
+            width: 60px;
+            height: 60px;
+            text-align: center;
+            font-size: 24px;
+            border: 2px solid white;
+            border-radius: 8px;
+            background-color: #808080;
+            color: white;
+            outline: none;
+        }
+
+        .otp-input:focus {
+            border-color: #4a90d9;
+            box-shadow: 0 0 10px rgba(74, 144, 217, 0.3);
+        }
+
+        .timer {
+            text-align: center;
+            color: white;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .timer.expired {
+            color: #ff6b6b;
+        }
+
+        .resend-btn {
+            background: none;
+            border: none;
+            color: #4a90d9;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: underline;
+            display: none;
+            margin-bottom: 15px;
+        }
+
+        .resend-btn:hover {
+            color: white;
+        }
+
+        .create-btn {
+            width: 100%;
+            padding: 16px;
+            background-color: white;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .create-btn:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .signup-container {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .left-side {
+                padding: 40px 30px;
+            }
+
+            .logo {
+                width: 180px;
+                height: 180px;
+            }
+
+            .left-side h1 {
+                font-size: 24px;
+            }
+
+            .right-side {
+                padding: 40px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="left-side">
+            <div class="logo">
+                <img src="logo.png" alt="Nexora Logo">
+            </div>
+            <h1>Welcome to Nexora</h1>
+            <p>Mine Smarter. Grow Faster. Choose Nexora.</p>
+        </div>
+        
+        <div class="right-side">
+            <!-- Sign Up Form -->
+            <div id="signupForm">
+                <h2>Create Account</h2>
+                <form onsubmit="return validateForm(event)">
+                    <div class="form-group">
+                        <label for="fullname">Full Name</label>
+                        <input type="text" id="fullname" placeholder="Enter full name" required>
+                        <span class="error-message" id="fullnameError">Full name is required</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" placeholder="Enter username" required>
+                        <span class="error-message" id="usernameError">Username is required</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="Enter email" required>
+                        <span class="error-message" id="emailError">Valid email is required</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Create Password</label>
+                        <input type="password" id="password" placeholder="Create password" required>
+                        <p class="password-requirements">Minimum 8 characters, 1 number, 1 special character</p>
+                        <span class="error-message" id="passwordError">Password must meet requirements</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" placeholder="Confirm password" required>
+                        <span class="error-message" id="confirmPasswordError">Passwords do not match</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="referral">Referral Link <span class="optional-label">(Optional)</span></label>
+                        <input type="text" id="referral" placeholder="Enter referral link">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="country">Country <span class="optional-label">(Optional)</span></label>
+                        <input type="text" id="country" placeholder="Enter your country">
+                    </div>
+
+                    <button type="submit" class="next-btn">Next</button>
+                    
+                    <p class="login-link">Already have an account? <a href="index.html">Login</a></p>
+                </form>
+            </div>
+
+            <!-- OTP Section -->
+            <div id="otpSection" class="otp-section">
+                <h2>Email Verification</h2>
+                <p style="color: white; margin-bottom: 20px; text-align: center;">Enter the 4-digit code sent to your email</p>
+                
+                <div class="otp-inputs">
+                    <input type="text" class="otp-input" maxlength="1" id="otp1" oninput="moveToNext(this, 'otp2')">
+                    <input type="text" class="otp-input" maxlength="1" id="otp2" oninput="moveToNext(this, 'otp3')">
+                    <input type="text" class="otp-input" maxlength="1" id="otp3" oninput="moveToNext(this, 'otp4')">
+                    <input type="text" class="otp-input" maxlength="1" id="otp4" oninput="moveToNext(this, '')">
+                </div>
+                
+                <div class="timer" id="timer">OTP expires in 1:00</div>
+                <button type="button" class="resend-btn" id="resendBtn" onclick="resendOTP()">Resend Code</button>
+                
+                <button type="button" class="create-btn" onclick="createAccount()">Create Account</button>
+                
+                <button type="button" class="back-btn" onclick="showSignupForm()">← Back</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Store current page before going offline
+        function storeCurrentPage() {
+            sessionStorage.setItem('nexora_redirect_page', window.location.href);
+        }
+
+        // Listen for offline event - redirect to nointernet.html
+        window.addEventListener('offline', function() {
+            storeCurrentPage();
+            window.location.href = 'nointernet.html';
+        });
+
+        // Check for internet connectivity on page load
+        function checkInternetConnection() {
+            if (!navigator.onLine) {
+                storeCurrentPage();
+                window.location.href = 'nointernet.html';
+                return false;
+            }
+            
+            // Try to fetch a resource to verify actual internet connectivity
+            fetch('https://www.google.com/generate_204', { method: 'HEAD', mode: 'no-cors' })
+                .then(function() {
+                    // Internet is working
+                })
+                .catch(function() {
+                    // No internet connection
+                    storeCurrentPage();
+                    window.location.href = 'nointernet.html';
+                });
+        }
+
+        // Initial check on page load
+        checkInternetConnection();
+
+        // Periodic check every 5 seconds
+        setInterval(checkInternetConnection, 5000);
+
+        window.addEventListener('online', function() {
+            // Already handled by nointernet.html
+        });
+
+        function validateForm(event) {
+            event.preventDefault();
+            
+            let isValid = true;
+            
+            // Full Name validation
+            const fullname = document.getElementById('fullname').value.trim();
+            if (!fullname) {
+                document.getElementById('fullname').classList.add('error');
+                document.getElementById('fullnameError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('fullname').classList.remove('error');
+                document.getElementById('fullnameError').style.display = 'none';
+            }
+            
+            // Username validation
+            const username = document.getElementById('username').value.trim();
+            if (!username) {
+                document.getElementById('username').classList.add('error');
+                document.getElementById('usernameError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('username').classList.remove('error');
+                document.getElementById('usernameError').style.display = 'none';
+            }
+            
+            // Email validation
+            const email = document.getElementById('email').value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email || !emailRegex.test(email)) {
+                document.getElementById('email').classList.add('error');
+                document.getElementById('emailError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('email').classList.remove('error');
+                document.getElementById('emailError').style.display = 'none';
+            }
+            
+            // Password validation
+            const password = document.getElementById('password').value;
+            const hasMinLength = password.length >= 8;
+            const hasNumber = /\d/.test(password);
+            const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+            
+            if (!hasMinLength || !hasNumber || !hasSpecial) {
+                document.getElementById('password').classList.add('error');
+                document.getElementById('passwordError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('password').classList.remove('error');
+                document.getElementById('passwordError').style.display = 'none';
+            }
+            
+            // Confirm Password validation
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            if (password !== confirmPassword) {
+                document.getElementById('confirmPassword').classList.add('error');
+                document.getElementById('confirmPasswordError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('confirmPassword').classList.remove('error');
+                document.getElementById('confirmPasswordError').style.display = 'none';
+            }
+            
+            if (isValid) {
+                showOTPSection();
+            }
+            
+            return false;
+        }
+        
+        function showOTPSection() {
+            document.getElementById('signupForm').style.display = 'none';
+            document.getElementById('otpSection').style.display = 'block';
+            startTimer();
+        }
+        
+        function showSignupForm() {
+            document.getElementById('otpSection').style.display = 'none';
+            document.getElementById('signupForm').style.display = 'block';
+            resetTimer();
+        }
+        
+        let timerInterval;
+        let timeLeft = 60;
+        
+        function startTimer() {
+            timeLeft = 60;
+            document.getElementById('timer').classList.remove('expired');
+            document.getElementById('resendBtn').style.display = 'none';
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                document.getElementById('timer').textContent = `OTP expires in ${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('timer').classList.add('expired');
+                    document.getElementById('timer').textContent = 'OTP expired';
+                    document.getElementById('resendBtn').style.display = 'block';
+                }
+            }, 1000);
+        }
+        
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 60;
+            document.getElementById('timer').textContent = 'OTP expires in 1:00';
+            document.getElementById('timer').classList.remove('expired');
+            document.getElementById('resendBtn').style.display = 'none';
+            
+            // Clear OTP inputs
+            document.getElementById('otp1').value = '';
+            document.getElementById('otp2').value = '';
+            document.getElementById('otp3').value = '';
+            document.getElementById('otp4').value = '';
+        }
+        
+        function resendOTP() {
+            startTimer();
+        }
+        
+        function moveToNext(current, nextId) {
+            if (current.value.length >= 1 && nextId) {
+                document.getElementById(nextId).focus();
+            }
+        }
+        
+        function createAccount() {
+            const otp1 = document.getElementById('otp1').value;
+            const otp2 = document.getElementById('otp2').value;
+            const otp3 = document.getElementById('otp3').value;
+            const otp4 = document.getElementById('otp4').value;
+            
+            const otp = otp1 + otp2 + otp3 + otp4;
+            
+            if (otp.length !== 4) {
+                alert('Please enter a valid 4-digit OTP');
+                return;
+            }
+            
+            if (timeLeft <= 0) {
+                alert('OTP has expired. Please resend the code.');
+                return;
+            }
+            
+            // Get form values and save user data
+            const userData = {
+                fullname: document.getElementById('fullname').value,
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                referral: document.getElementById('referral').value,
+                country: document.getElementById('country').value
+            };
+            
+            // Save to localStorage
+            localStorage.setItem('nexora_user', JSON.stringify(userData));
+            localStorage.setItem('accountCreated', new Date().toLocaleDateString());
+            localStorage.setItem('isLoggedIn', 'true');
+            
+            // Redirect to dashboard
+            window.location.href = 'dashboard.html';
+        }
+    </script>
+</body>
+</html>

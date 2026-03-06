@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="Favicon.png" type="image/png">
+    <title>Verify Code - Nexora</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #808080;
+            padding: 20px;
+        }
+
+        .verify-container {
+            display: flex;
+            width: 900px;
+            max-width: 100%;
+            background-color: #808080;
+            border: 3px solid white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .left-side {
+            flex: 1;
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .logo {
+            width: 250px;
+            height: 250px;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .left-side h1 {
+            color: white;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .left-side p {
+            color: #b8c5d6;
+            font-size: 16px;
+            line-height: 1.6;
+            max-width: 280px;
+        }
+
+        .right-side {
+            flex: 1;
+            background-color: #808080;
+            padding: 60px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .right-side h2 {
+            color: white;
+            font-size: 28px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .right-side > p {
+            color: #b8c5d6;
+            font-size: 14px;
+            margin-bottom: 35px;
+            line-height: 1.6;
+        }
+
+        .email-display {
+            color: white;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .otp-inputs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .otp-input {
+            width: 60px;
+            height: 60px;
+            text-align: center;
+            font-size: 24px;
+            border: 2px solid white;
+            border-radius: 8px;
+            background-color: #808080;
+            color: white;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .otp-input::placeholder {
+            color: #cccccc;
+        }
+
+        .otp-input:focus {
+            border-color: #4a90d9;
+            box-shadow: 0 0 10px rgba(74, 144, 217, 0.3);
+        }
+
+        .timer {
+            text-align: center;
+            color: white;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .timer.expired {
+            color: #ff6b6b;
+        }
+
+        .resend-btn {
+            background: none;
+            border: none;
+            color: #4a90d9;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: underline;
+            display: none;
+            margin-bottom: 15px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .resend-btn:hover {
+            color: white;
+        }
+
+        .verify-btn {
+            width: 100%;
+            padding: 16px;
+            background-color: white;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .verify-btn:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: underline;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .back-btn:hover {
+            color: #4a90d9;
+        }
+
+        @media (max-width: 768px) {
+            .verify-container {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .left-side {
+                padding: 40px 30px;
+            }
+
+            .logo {
+                width: 180px;
+                height: 180px;
+            }
+
+            .left-side h1 {
+                font-size: 24px;
+            }
+
+            .right-side {
+                padding: 40px 30px;
+            }
+
+            .otp-input {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="verify-container">
+        <div class="left-side">
+            <div class="logo">
+                <img src="logo.png" alt="Nexora Logo">
+            </div>
+            <h1>Welcome to Nexora</h1>
+            <p>Mine Smarter. Grow Faster. Choose Nexora.</p>
+        </div>
+        
+        <div class="right-side">
+            <h2>Verify Your Email</h2>
+            <p>Enter the 4-digit code sent to your email address</p>
+            
+            <p class="email-display" id="emailDisplay">your@email.com</p>
+            
+            <div class="otp-inputs">
+                <input type="text" class="otp-input" maxlength="1" id="otp1" placeholder="0" oninput="moveToNext(this, 'otp2')">
+                <input type="text" class="otp-input" maxlength="1" id="otp2" placeholder="0" oninput="moveToNext(this, 'otp3')">
+                <input type="text" class="otp-input" maxlength="1" id="otp3" placeholder="0" oninput="moveToNext(this, 'otp4')">
+                <input type="text" class="otp-input" maxlength="1" id="otp4" placeholder="0" oninput="moveToNext(this, '')">
+            </div>
+            
+            <div class="timer" id="timer">Code expires in 1:00</div>
+            <button type="button" class="resend-btn" id="resendBtn" onclick="resendCode()">Resend Code</button>
+            
+            <button type="button" class="verify-btn" onclick="verifyCode()">Verify</button>
+            
+            <button type="button" class="back-btn" onclick="window.location.href='forgot.html'">
+                ← Back
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Store current page before going offline
+        function storeCurrentPage() {
+            sessionStorage.setItem('nexora_redirect_page', window.location.href);
+        }
+
+        // Listen for offline event - redirect to nointernet.html
+        window.addEventListener('offline', function() {
+            storeCurrentPage();
+            window.location.href = 'nointernet.html';
+        });
+
+        // Check for internet connectivity on page load
+        function checkInternetConnection() {
+            if (!navigator.onLine) {
+                storeCurrentPage();
+                window.location.href = 'nointernet.html';
+                return false;
+            }
+            
+            // Try to fetch a resource to verify actual internet connectivity
+            fetch('https://www.google.com/generate_204', { method: 'HEAD', mode: 'no-cors' })
+                .then(function() {
+                    // Internet is working
+                })
+                .catch(function() {
+                    // No internet connection
+                    storeCurrentPage();
+                    window.location.href = 'nointernet.html';
+                });
+        }
+
+        // Initial check on page load
+        checkInternetConnection();
+
+        // Periodic check every 5 seconds
+        setInterval(checkInternetConnection, 5000);
+
+        // Display stored email (or use a default)
+        const storedEmail = localStorage.getItem('forgotEmail') || 'your@email.com';
+        document.getElementById('emailDisplay').textContent = storedEmail;
+
+        let timerInterval;
+        let timeLeft = 60;
+
+        function startTimer() {
+            timeLeft = 60;
+            document.getElementById('timer').classList.remove('expired');
+            document.getElementById('resendBtn').style.display = 'none';
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                document.getElementById('timer').textContent = `Code expires in ${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('timer').classList.add('expired');
+                    document.getElementById('timer').textContent = 'Code expired';
+                    document.getElementById('resendBtn').style.display = 'block';
+                }
+            }, 1000);
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 60;
+            document.getElementById('timer').textContent = 'Code expires in 1:00';
+            document.getElementById('timer').classList.remove('expired');
+            document.getElementById('resendBtn').style.display = 'none';
+            
+            // Clear OTP inputs
+            document.getElementById('otp1').value = '';
+            document.getElementById('otp2').value = '';
+            document.getElementById('otp3').value = '';
+            document.getElementById('otp4').value = '';
+            
+            // Focus first input
+            document.getElementById('otp1').focus();
+        }
+
+        function moveToNext(current, nextId) {
+            const value = current.value;
+            
+            // Only allow digits
+            if (!/^\d*$/.test(value)) {
+                current.value = '';
+                return;
+            }
+            
+            if (value.length === 1 && nextId) {
+                document.getElementById(nextId).focus();
+            }
+        }
+
+        function resendCode() {
+            // Reset timer and clear inputs
+            resetTimer();
+            startTimer();
+            
+            // In a real app, this would resend the code
+            alert('Code resent to your email!');
+        }
+
+        function verifyCode() {
+            const otp1 = document.getElementById('otp1').value;
+            const otp2 = document.getElementById('otp2').value;
+            const otp3 = document.getElementById('otp3').value;
+            const otp4 = document.getElementById('otp4').value;
+            
+            const fullCode = otp1 + otp2 + otp3 + otp4;
+            
+            if (fullCode.length !== 4) {
+                alert('Please enter the complete 4-digit code');
+                return;
+            }
+            
+            // For demo purposes, accept any 4-digit code
+            // In production, you would validate against the server
+            if (timeLeft <= 0) {
+                alert('Code has expired. Please resend the code.');
+                return;
+            }
+            
+            // Navigate to password reset page
+            window.location.href = 'forgot-password.html';
+        }
+
+        // Start timer on page load
+        startTimer();
+
+        // Handle Enter key on OTP inputs
+        document.querySelectorAll('.otp-input').forEach((input, index, inputs) => {
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    verifyCode();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

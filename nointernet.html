@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="Favicon.png" type="image/png">
+    <title>No Internet - Nexora</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #808080;
+            padding: 20px;
+        }
+
+        .nointernet-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            max-width: 500px;
+        }
+
+        .icon-container {
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            border: 4px solid white;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+            }
+        }
+
+        .icon-container .wifi-icon {
+            font-size: 60px;
+        }
+
+        .nointernet-container h1 {
+            color: white;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .nointernet-container p {
+            color: #b8c5d6;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #e74c3c;
+            animation: blink 1s ease-in-out infinite;
+        }
+
+        .status-dot.online {
+            background-color: #2ecc71;
+            animation: none;
+        }
+
+        @keyframes blink {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        .status-text {
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .retry-btn {
+            padding: 16px 40px;
+            background-color: white;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .retry-btn:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .redirect-info {
+            margin-top: 25px;
+            padding: 15px 25px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .redirect-info p {
+            color: white;
+            font-size: 14px;
+            margin-bottom: 0;
+        }
+
+        .redirect-info .page-name {
+            font-weight: 600;
+            color: #4a90d9;
+        }
+
+        @media (max-width: 768px) {
+            .nointernet-container h1 {
+                font-size: 26px;
+            }
+            
+            .icon-container {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .icon-container .wifi-icon {
+                font-size: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="nointernet-container">
+        <div class="icon-container">
+            <span class="wifi-icon">📡</span>
+        </div>
+        
+        <h1>No Internet Connection</h1>
+        <p>Oops! It seems your internet connection has been lost. Please check your network settings and try again.</p>
+        
+        <div class="status-indicator">
+            <div class="status-dot" id="statusDot"></div>
+            <span class="status-text" id="statusText">Checking connection...</span>
+        </div>
+        
+        <a href="#" class="retry-btn" id="retryBtn" onclick="checkConnectionAndRedirect()">Retry Now</a>
+        
+        <div class="redirect-info" id="redirectInfo" style="display: none;">
+            <p>You will be redirected to: <span class="page-name" id="targetPage"></span></p>
+        </div>
+    </div>
+
+    <script>
+        // Get the stored redirect page from sessionStorage
+        const redirectPage = sessionStorage.getItem('nexora_redirect_page');
+        
+        if (redirectPage) {
+            document.getElementById('redirectInfo').style.display = 'block';
+            document.getElementById('targetPage').textContent = redirectPage;
+        }
+
+        function checkConnectionAndRedirect() {
+            if (navigator.onLine) {
+                if (redirectPage) {
+                    sessionStorage.removeItem('nexora_redirect_page');
+                    window.location.href = redirectPage;
+                } else {
+                    window.location.href = 'dashboard.html';
+                }
+            } else {
+                alert('Still no internet connection. Please check your network.');
+            }
+        }
+
+        // Listen for online event
+        window.addEventListener('online', function() {
+            document.getElementById('statusDot').classList.add('online');
+            document.getElementById('statusText').textContent = 'Connection restored!';
+            
+            // Auto redirect after 1.5 seconds
+            setTimeout(function() {
+                if (redirectPage) {
+                    sessionStorage.removeItem('nexora_redirect_page');
+                    window.location.href = redirectPage;
+                } else {
+                    window.location.href = 'dashboard.html';
+                }
+            }, 1500);
+        });
+
+        // Listen for offline event
+        window.addEventListener('offline', function() {
+            document.getElementById('statusDot').classList.remove('online');
+            document.getElementById('statusText').textContent = 'Connection lost';
+        });
+
+        // Initial status check
+        if (navigator.onLine) {
+            document.getElementById('statusDot').classList.add('online');
+            document.getElementById('statusText').textContent = 'Connection restored!';
+            setTimeout(function() {
+                if (redirectPage) {
+                    sessionStorage.removeItem('nexora_redirect_page');
+                    window.location.href = redirectPage;
+                } else {
+                    window.location.href = 'dashboard.html';
+                }
+            }, 1500);
+        } else {
+            document.getElementById('statusText').textContent = 'Waiting for connection...';
+        }
+    </script>
+</body>
+</html>
